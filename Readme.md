@@ -33,7 +33,7 @@ cat vscode-extensions.txt | xargs -n 1 code --install-extension
 
 - ` ~/.config/karabiner/karabiner.json`のファイルを置き換えてください。
 
-⚠️ 既存のキーバインド設定は上書きされます。必要に実行前にバックアップを取ってください。
+⚠️ 既存のキーバインド設定は上書きされます。必要に応じて実行前にバックアップを取ってください。
 
 ```
 cd my-pc-settings

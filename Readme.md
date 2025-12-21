@@ -15,9 +15,16 @@ brew bundle
 - ファイル: vscode-extensions.txt
 - インポート手順:
 
+#### vscodeでのインストール方法
 ```bash
 cat vscode-extensions.txt | xargs -n 1 code --install-extension
 ```
+
+#### Antigravityでのインストール
+```bash
+cat vscode-extensions.txt | xargs -n 1 agy --install-extension
+```
+
 
 ### vscode のキーバインド設定
 

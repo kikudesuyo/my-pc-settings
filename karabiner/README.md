@@ -14,3 +14,7 @@ cp karabiner/karabiner.json ~/.config/karabiner/karabiner.json
 ```bash
 cp ~/.config/karabiner/karabiner.json karabiner/karabiner.json
 ```
+
+<!-- LAST_UPDATED -->
+最終更新: 2026-06-16
+<!-- /LAST_UPDATED -->

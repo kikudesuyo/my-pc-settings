@@ -18,3 +18,7 @@ cat vscode/extensions.txt | xargs -n 1 code --install-extension
 ```bash
 code --list-extensions > vscode/extensions.txt
 ```
+
+<!-- LAST_UPDATED -->
+最終更新: 2026-06-16
+<!-- /LAST_UPDATED -->

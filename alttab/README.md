@@ -17,3 +17,7 @@ AltTab の Preferences を開き、スクリーンショットを見ながら設
 - cmd+tab で表示
 
 - AltTab、Finder、Slack は常に off にする
+
+<!-- LAST_UPDATED -->
+最終更新: 2026-06-16
+<!-- /LAST_UPDATED -->

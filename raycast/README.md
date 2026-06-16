@@ -19,3 +19,7 @@
 
 - shift2回でwindowを別ディスプレイに移動
 -
+
+<!-- LAST_UPDATED -->
+最終更新: 2026-06-16
+<!-- /LAST_UPDATED -->

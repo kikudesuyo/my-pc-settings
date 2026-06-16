@@ -12,3 +12,7 @@ cat antigravity/extensions.txt | xargs -n 1 agy --install-extension
 ```bash
 agy --list-extensions > antigravity/extensions.txt
 ```
+
+<!-- LAST_UPDATED -->
+最終更新: 2026-06-16
+<!-- /LAST_UPDATED -->

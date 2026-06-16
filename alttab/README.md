@@ -19,5 +19,5 @@ AltTab の Preferences を開き、スクリーンショットを見ながら設
 - AltTab、Finder、Slack は常に off にする
 
 <!-- LAST_UPDATED -->
-最終更新: 2026-06-16
+最終更新: 2026-06-16 14:05 JST
 <!-- /LAST_UPDATED -->

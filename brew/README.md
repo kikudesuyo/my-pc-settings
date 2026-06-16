@@ -15,5 +15,5 @@ brew bundle dump --file brew/Brewfile --force
 ```
 
 <!-- LAST_UPDATED -->
-最終更新: 2026-06-16
+最終更新: 2026-06-16 05:03 JST
 <!-- /LAST_UPDATED -->

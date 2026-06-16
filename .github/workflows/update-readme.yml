@@ -1,0 +1,56 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 各アプリのREADMEと、ルートREADMEのテーブルを更新
+        run: |
+          TABLE="| アプリ | 最終更新 |\n|--------|----------|\n"
+          MARKER_START="<!-- LAST_UPDATED -->"
+          MARKER_END="<!-- /LAST_UPDATED -->"
+
+          # README.mdのリンク行からアプリ名とディレクトリを動的に取得
+          while IFS= read -r line; do
+            NAME=$(echo "$line" | sed -n 's/.*\[\(.*\)\](.*/\1/p')
+            DIR=$(echo "$line" | sed -n 's/.*(\(.*\)\/.*/\1/p')
+            [ -z "$NAME" ] || [ -z "$DIR" ] && continue
+
+            DATE=$(git log -1 --format="%ad" --date=format:"%Y-%m-%d" -- "$DIR/" 2>/dev/null)
+            DATE="${DATE:-未更新}"
+            TABLE+="| $NAME | $DATE |\n"
+
+            # 各アプリのREADME.mdにも最終更新日を書き込む
+            APP_README="$DIR/README.md"
+            if [ -f "$APP_README" ]; then
+              NEW_BLOCK="$MARKER_START\n最終更新: $DATE\n$MARKER_END"
+              if grep -q "$MARKER_START" "$APP_README"; then
+                perl -i -0pe "s|$MARKER_START.*?$MARKER_END|$NEW_BLOCK|s" "$APP_README"
+              else
+                printf "\n$NEW_BLOCK\n" >> "$APP_README"
+              fi
+            fi
+          done < <(grep -E '^\- \[.*\]\(.*\/README\.md\)' README.md)
+
+          # ルートREADME.mdのテーブルを更新
+          NEW_BLOCK="<!-- APP_TABLE_START -->\n$TABLE<!-- APP_TABLE_END -->"
+          perl -i -0pe "s|<!-- APP_TABLE_START -->.*?<!-- APP_TABLE_END -->|$NEW_BLOCK|s" README.md
+
+      - name: 変更をコミット＆プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md */README.md
+          git diff --cached --quiet || git commit -m "docs: READMEの最終更新日を自動更新"
+          git push

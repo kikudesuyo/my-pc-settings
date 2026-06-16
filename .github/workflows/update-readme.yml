@@ -17,35 +17,49 @@ jobs:
 
       - name: 各アプリのREADMEと、ルートREADMEのテーブルを更新
         run: |
-          TABLE="| アプリ | 最終更新 |\n|--------|----------|\n"
-          MARKER_START="<!-- LAST_UPDATED -->"
-          MARKER_END="<!-- /LAST_UPDATED -->"
+          python3 << 'EOF'
+          import subprocess
+          import re
+          from pathlib import Path
+
+          ROOT_README = Path("README.md")
+          content = ROOT_README.read_text(encoding="utf-8")
 
           # README.mdのリンク行からアプリ名とディレクトリを動的に取得
-          while IFS= read -r line; do
-            NAME=$(echo "$line" | sed -n 's/.*\[\(.*\)\](.*/\1/p')
-            DIR=$(echo "$line" | sed -n 's/.*(\(.*\)\/.*/\1/p')
-            [ -z "$NAME" ] || [ -z "$DIR" ] && continue
+          pattern = re.compile(r'^\- \[(.+?)\]\((.+?)/README\.md\)', re.MULTILINE)
+          rows = []
+          for name, dir_ in pattern.findall(content):
+              result = subprocess.run(
+                  ["git", "log", "-1", "--format=%ad", "--date=format:%Y-%m-%d", "--", f"{dir_}/"],
+                  capture_output=True, text=True
+              )
+              date = result.stdout.strip() or "未更新"
+              rows.append((name, date))
 
-            DATE=$(git log -1 --format="%ad" --date=format:"%Y-%m-%d" -- "$DIR/" 2>/dev/null)
-            DATE="${DATE:-未更新}"
-            TABLE+="| $NAME | $DATE |\n"
-
-            # 各アプリのREADME.mdにも最終更新日を書き込む
-            APP_README="$DIR/README.md"
-            if [ -f "$APP_README" ]; then
-              NEW_BLOCK="$MARKER_START\n最終更新: $DATE\n$MARKER_END"
-              if grep -q "$MARKER_START" "$APP_README"; then
-                perl -i -0pe "s|$MARKER_START.*?$MARKER_END|$NEW_BLOCK|s" "$APP_README"
-              else
-                printf "\n$NEW_BLOCK\n" >> "$APP_README"
-              fi
-            fi
-          done < <(grep -E '^\- \[.*\]\(.*\/README\.md\)' README.md)
+              # 各アプリのREADME.mdに最終更新日を書き込む
+              app_readme = Path(dir_) / "README.md"
+              if app_readme.exists():
+                  app_content = app_readme.read_text(encoding="utf-8")
+                  block = f"<!-- LAST_UPDATED -->\n最終更新: {date}\n<!-- /LAST_UPDATED -->"
+                  if "<!-- LAST_UPDATED -->" in app_content:
+                      app_content = re.sub(
+                          r'<!-- LAST_UPDATED -->.*?<!-- /LAST_UPDATED -->',
+                          block, app_content, flags=re.DOTALL
+                      )
+                  else:
+                      app_content += f"\n{block}\n"
+                  app_readme.write_text(app_content, encoding="utf-8")
 
           # ルートREADME.mdのテーブルを更新
-          NEW_BLOCK="<!-- APP_TABLE_START -->\n$TABLE<!-- APP_TABLE_END -->"
-          perl -i -0pe "s|<!-- APP_TABLE_START -->.*?<!-- APP_TABLE_END -->|$NEW_BLOCK|s" README.md
+          table_rows = "\n".join(f"| {name} | {date} |" for name, date in rows)
+          table = f"| アプリ | 最終更新 |\n|--------|----------|\n{table_rows}"
+          new_block = f"<!-- APP_TABLE_START -->\n{table}\n<!-- APP_TABLE_END -->"
+          content = re.sub(
+              r'<!-- APP_TABLE_START -->.*?<!-- APP_TABLE_END -->',
+              new_block, content, flags=re.DOTALL
+          )
+          ROOT_README.write_text(content, encoding="utf-8")
+          EOF
 
       - name: 変更をコミット＆プッシュ
         run: |

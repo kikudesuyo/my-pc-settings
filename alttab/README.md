@@ -2,7 +2,7 @@
 
 ## Setup
 
-AltTab の Preferences を開き、スクリーンショットを見ながら設定します。
+AltTab の Preferences を開き、スクリーンショットを見ながら設定します
 
 - `Appearance.png`: 表示設定
 - `Controls.png`: 操作設定

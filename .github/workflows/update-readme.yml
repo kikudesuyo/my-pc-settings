@@ -30,10 +30,11 @@ jobs:
           rows = []
           for name, dir_ in pattern.findall(content):
               result = subprocess.run(
-                  ["git", "log", "-1", "--format=%ad", "--date=format:%Y-%m-%d", "--", f"{dir_}/"],
+                  ["git", "log", "-1", "--format=%ad", "--date=format:%Y-%m-%d %H:%M", "--", f"{dir_}/"],
+                  env={**__import__('os').environ, "TZ": "Asia/Tokyo"},
                   capture_output=True, text=True
               )
-              date = result.stdout.strip() or "未更新"
+              date = (result.stdout.strip() + " JST") if result.stdout.strip() else "未更新"
               rows.append((name, date))
 
               # 各アプリのREADME.mdに最終更新日を書き込む

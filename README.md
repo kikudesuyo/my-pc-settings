@@ -14,10 +14,10 @@
 <!-- APP_TABLE_START -->
 | アプリ | 最終更新 |
 |--------|----------|
-| Homebrew | 2026-06-16 05:03 JST |
-| Visual Studio Code | 2026-06-16 05:03 JST |
-| Antigravity | 2026-06-16 05:03 JST |
-| Karabiner-Elements | 2026-06-16 05:03 JST |
-| Raycast | 2026-06-16 05:03 JST |
-| AltTab | 2026-06-16 14:05 JST |
+| Homebrew | 2026-06-16 05:07 JST |
+| Visual Studio Code | 2026-06-16 05:07 JST |
+| Antigravity | 2026-06-16 05:07 JST |
+| Karabiner-Elements | 2026-06-16 05:07 JST |
+| Raycast | 2026-06-16 05:07 JST |
+| AltTab | 2026-06-16 14:11 JST |
 <!-- APP_TABLE_END -->
